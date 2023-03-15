@@ -5,6 +5,7 @@ This repository contains a TMDB android application that loads TV Shows and disp
 ## 💻 Requirements
 
 [Android Studio](https://developer.android.com/studio).
+
 [Device Downloadable APK](https://github.com/EdiDEngineer/TMDBShows/blob/master/app-debug.apk)
 
 ## Resources
