@@ -3,8 +3,9 @@ package com.example.tmdbshows.remote.mapper.toprated
 import com.example.tmdbshows.domain.entity.TopRatedEntity
 import com.example.tmdbshows.remote.mapper.RemoteModelMapper
 import com.example.tmdbshows.remote.model.networkmodel.TopRatedNetworkModel
+import javax.inject.Inject
 
-class TopRatedNetworkModelMapper :
+class TopRatedNetworkModelMapper @Inject constructor() :
     RemoteModelMapper<TopRatedNetworkModel, TopRatedEntity> {
 
     override fun mapFromModel(model: TopRatedNetworkModel): TopRatedEntity {

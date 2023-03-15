@@ -23,7 +23,6 @@ interface TMDBApi {
     ): Response<TopRatedNetworkResponse>
 
     companion object {
-
         private const val API_KEY = "25a8f80ba018b52efb64f05140f6b43c"
 
         private val baseUrl = HttpUrl.Builder()
@@ -35,13 +34,7 @@ interface TMDBApi {
             .add(KotlinJsonAdapterFactory())
             .build()
 
-        private val okHttpClient = OkHttpClient.Builder().retryOnConnectionFailure(true)
-            .addInterceptor(HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            })
-            .build()
-
-        fun create(client: OkHttpClient = okHttpClient): TMDBApi = create(baseUrl, client)
+        fun create(client: OkHttpClient): TMDBApi = create(baseUrl, client)
 
         private fun create(httpUrl: HttpUrl, client: OkHttpClient): TMDBApi {
             return Retrofit.Builder()

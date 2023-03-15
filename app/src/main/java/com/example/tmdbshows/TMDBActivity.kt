@@ -11,7 +11,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tmdbshows.presentation.viewmodel.TMDBViewModel
 import com.example.tmdbshows.ui.screen.TMDBHomeScreen
 import com.example.tmdbshows.ui.theme.TMDBShowsTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class TMDBActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

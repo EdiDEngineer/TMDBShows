@@ -3,16 +3,16 @@ package com.example.tmdbshows.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tmdbshows.domain.contract.TMDBRepo
-import com.example.tmdbshows.domain.impl.TMDBRepoImpl
 import com.example.tmdbshows.presentation.uistate.TopRatedUiState
-import com.example.tmdbshows.remote.TMDBApi
-import com.example.tmdbshows.remote.mapper.toprated.TopRatedNetworkModelMapper
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TMDBViewModel(private val tmdbRepo: TMDBRepo = TMDBRepoImpl(TMDBApi.create(), TopRatedNetworkModelMapper())) : ViewModel() {
+@HiltViewModel
+class TMDBViewModel @Inject constructor(private val tmdbRepo: TMDBRepo) : ViewModel() {
     private val _topRatedUiState = MutableStateFlow<TopRatedUiState>(TopRatedUiState.Loading)
     val topRatedUiState: StateFlow<TopRatedUiState> = _topRatedUiState
 

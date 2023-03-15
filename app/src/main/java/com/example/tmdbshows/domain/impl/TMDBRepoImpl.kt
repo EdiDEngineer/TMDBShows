@@ -8,8 +8,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import javax.inject.Inject
 
-class TMDBRepoImpl(private val tmdbApi: TMDBApi, private val topRatedNetworkModelMapper: TopRatedNetworkModelMapper) : TMDBRepo {
+class TMDBRepoImpl @Inject constructor(private val tmdbApi: TMDBApi, private val topRatedNetworkModelMapper: TopRatedNetworkModelMapper) : TMDBRepo {
 
     override fun getTopRated(language: String, page: Int): Flow<List<TopRatedEntity>> {
         return flow {
