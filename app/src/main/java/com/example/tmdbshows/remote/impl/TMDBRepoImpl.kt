@@ -1,4 +1,4 @@
-package com.example.tmdbshows.domain.impl
+package com.example.tmdbshows.remote.impl
 
 import com.example.tmdbshows.domain.contract.TMDBRepo
 import com.example.tmdbshows.domain.entity.TopRatedEntity
@@ -23,5 +23,4 @@ class TMDBRepoImpl @Inject constructor(private val tmdbApi: TMDBApi, private val
             }
         }.flowOn(Dispatchers.IO)
     }
-
 }

@@ -21,5 +21,4 @@ interface RemoteModelMapper<in M, out E> {
             }
         } ?: "N/A"
     }
-
 }

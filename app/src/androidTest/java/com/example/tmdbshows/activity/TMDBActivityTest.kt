@@ -1,9 +1,6 @@
 package com.example.tmdbshows.activity
 
-import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.onNodeWithContentDescription
-import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.*
 import com.example.tmdbshows.R
 import com.example.tmdbshows.tools.BaseUITest
 import com.example.tmdbshows.ui.screen.LOADER_TEST_TAG
@@ -15,30 +12,21 @@ import org.junit.Test
 class TMDBActivityTest : BaseUITest() {
 
     @Test
-    fun tmdbTopAppBarText_IsDisplayed() {
+    fun displayHomeScreenWidgetsWhenActivityStarts() {
         composeTestRule.onNode(hasText(composeTestRule.activity.getString(R.string.app_name))).assertIsDisplayed()
-    }
-
-    @Test
-    fun sortIcon_IsDisplayed() {
-        composeTestRule.onNodeWithContentDescription(SORT_ICON_DESCRIPTION).assertIsDisplayed()
-    }
-
-    @Test
-    fun sortButtonAndLoader_IsDisplayed() {
-        composeTestRule.onNodeWithTag(LOADER_TEST_TAG).assertIsDisplayed()
         composeTestRule.onNodeWithTag(SORT_BUTTON_TEST_TAG).assertIsDisplayed()
-    }
-
-    @Test
-    fun movieList_IsDisplayed() {
+        composeTestRule.onNodeWithContentDescription(SORT_ICON_DESCRIPTION).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(LOADER_TEST_TAG).assertIsDisplayed()
         Thread.sleep(1000)
         composeTestRule.onNodeWithTag(MOVIE_LIST_TEST_TAG).assertIsDisplayed()
+        composeTestRule.onNodeWithTag("The D'Amelio Show").assertIsDisplayed()
     }
 
     @Test
-    fun movie_IsDisplayed() {
+    fun displayAlphabeticalListWhenSortButtonIsClicked() {
         Thread.sleep(1000)
-        composeTestRule.onNodeWithTag("The D'Amelio Show").assertIsDisplayed()
+        composeTestRule.onNodeWithTag(SORT_BUTTON_TEST_TAG).performClick()
+        composeTestRule.onNodeWithTag(MOVIE_LIST_TEST_TAG).assertIsDisplayed()
+        composeTestRule.onNodeWithTag("Arcane").assertIsDisplayed()
     }
 }

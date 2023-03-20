@@ -13,29 +13,28 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TMDBViewModel @Inject constructor(private val tmdbRepo: TMDBRepo) : ViewModel() {
-    private val _topRatedUiState = MutableStateFlow<TopRatedUiState>(TopRatedUiState.Loading)
-    val topRatedUiState: StateFlow<TopRatedUiState> = _topRatedUiState
+    private val _topRatedUiStateFlow = MutableStateFlow<TopRatedUiState>(TopRatedUiState.Loading)
+    val topRatedUiStateStateFlow: StateFlow<TopRatedUiState> = _topRatedUiStateFlow
 
     init {
         viewModelScope.launch {
             tmdbRepo.getTopRated("en-US", 1)
                 .catch { error ->
-                    _topRatedUiState.value = TopRatedUiState.Error(error)
+                    _topRatedUiStateFlow.value = TopRatedUiState.Error(error)
                 }
                 .collect { topRatedList ->
-                    _topRatedUiState.value = TopRatedUiState.Success(topRatedList)
+                    _topRatedUiStateFlow.value = TopRatedUiState.Success(topRatedList)
                 }
         }
     }
 
     fun sortTopRatedAlphabetically() {
-        val currentUiState = _topRatedUiState.value
+        val currentUiState = _topRatedUiStateFlow.value
         if (currentUiState is TopRatedUiState.Success) {
             val sortedTopRatedList = currentUiState.topRatedList.sortedBy {
                 it.name
             }
-            _topRatedUiState.value = TopRatedUiState.Success(sortedTopRatedList)
+            _topRatedUiStateFlow.value = TopRatedUiState.Success(sortedTopRatedList)
         }
     }
-
 }
