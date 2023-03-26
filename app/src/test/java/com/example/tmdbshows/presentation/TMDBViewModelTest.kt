@@ -10,7 +10,9 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
@@ -35,10 +37,10 @@ class TMDBViewModelTest : BaseUnitTest() {
     @Test
     fun setSuccessStateWhenReceiveTopRatedTest() = runTest {
         val tmdbViewModel = mockSuccessfulCase()
-        var uiStateValue = tmdbViewModel.topRatedUiStateStateFlow.value
+        var uiStateValue = tmdbViewModel.topRatedUiState.value
         assertTrue(uiStateValue is TopRatedUiState.Loading)
         advanceUntilIdle()
-        uiStateValue = tmdbViewModel.topRatedUiStateStateFlow.value
+        uiStateValue = tmdbViewModel.topRatedUiState.value
         assertTrue(uiStateValue is TopRatedUiState.Success)
         assertEquals(
             (uiStateValue as TopRatedUiState.Success).topRatedList,
@@ -49,11 +51,11 @@ class TMDBViewModelTest : BaseUnitTest() {
     @Test
     fun setSuccessStateWhenSortedAlphabeticallyTest() = runTest {
         val tmdbViewModel = mockSuccessfulCase()
-        var uiStateValue = tmdbViewModel.topRatedUiStateStateFlow.value
+        var uiStateValue = tmdbViewModel.topRatedUiState.value
         assertTrue(uiStateValue is TopRatedUiState.Loading)
         advanceUntilIdle()
         tmdbViewModel.sortTopRatedAlphabetically()
-        uiStateValue = tmdbViewModel.topRatedUiStateStateFlow.value
+        uiStateValue = tmdbViewModel.topRatedUiState.value
         assertTrue(uiStateValue is TopRatedUiState.Success)
         assertEquals((uiStateValue as TopRatedUiState.Success).topRatedList,
             topRatedEntityList.sortedBy {
@@ -66,16 +68,17 @@ class TMDBViewModelTest : BaseUnitTest() {
     @Test
     fun setErrorStateWhenReceiveErrorTest() = runTest {
         val tmdbViewModel = mockThrowableCase()
-        var uiStateValue = tmdbViewModel.topRatedUiStateStateFlow.value
+        var uiStateValue = tmdbViewModel.topRatedUiState.value
         assertTrue(uiStateValue is TopRatedUiState.Loading)
         advanceUntilIdle()
-        uiStateValue = tmdbViewModel.topRatedUiStateStateFlow.value
+        uiStateValue = tmdbViewModel.topRatedUiState.value
         assertTrue(uiStateValue is TopRatedUiState.Error)
         assertEquals(
             (uiStateValue as TopRatedUiState.Error).throwable,
             throwable
         )
     }
+
 
     private fun mockSuccessfulCase(): TMDBViewModel {
         whenever(

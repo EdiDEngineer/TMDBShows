@@ -26,9 +26,9 @@ class TMDBActivity : ComponentActivity() {
 
 @Composable
 fun TMDBHomeApp(tmdbViewModel: TMDBViewModel = viewModel()) {
-    val topRatedUiState = tmdbViewModel.topRatedUiStateStateFlow.collectAsStateWithLifecycle().value
+    val topRatedUiState = tmdbViewModel.topRatedUiState.collectAsStateWithLifecycle()
     TMDBShowsTheme {
-        TMDBHomeScreen(topRatedUiState = topRatedUiState, sortTopRated = {
+        TMDBHomeScreen(topRatedUiState = topRatedUiState.value, sortTopRated = {
             tmdbViewModel.sortTopRatedAlphabetically()
         })
     }

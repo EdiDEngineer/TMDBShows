@@ -1,5 +1,6 @@
 package com.example.tmdbshows.domain.entity
 
+
 data class TopRatedEntity(
     val backdropPath: String,
     val firstAirDate: String,

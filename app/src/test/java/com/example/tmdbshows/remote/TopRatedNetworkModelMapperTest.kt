@@ -19,7 +19,19 @@ class TopRatedNetworkModelMapperTest : BaseUnitTest() {
         )
 
         val topRatedEntity = classUnderTest.mapFromModel(topRatedNetworkModel)
-        validateMappedModel(topRatedNetworkModel, topRatedEntity)
+        validateMappedBackdropPath(topRatedNetworkModel, topRatedEntity)
+        validateMappedFirstAirDate(topRatedNetworkModel, topRatedEntity)
+        validateMappedGenreIds(topRatedNetworkModel, topRatedEntity)
+        validateMappedId(topRatedNetworkModel, topRatedEntity)
+        validateMappedName(topRatedNetworkModel, topRatedEntity)
+        validateMappedOriginCountry(topRatedNetworkModel, topRatedEntity)
+        validateMappedOriginLanguage(topRatedNetworkModel, topRatedEntity)
+        validateMappedOriginName(topRatedNetworkModel, topRatedEntity)
+        validateMappedOverview(topRatedNetworkModel, topRatedEntity)
+        validateMappedPopularity(topRatedNetworkModel, topRatedEntity)
+        validateMappedPosterPath(topRatedNetworkModel, topRatedEntity)
+        validateMappedVoteAverage(topRatedNetworkModel, topRatedEntity)
+        validateMappedVoteCount(topRatedNetworkModel, topRatedEntity)
     }
 
     @Test
@@ -30,7 +42,19 @@ class TopRatedNetworkModelMapperTest : BaseUnitTest() {
         )
 
         val topRatedEntity = classUnderTest.mapFromModel(topRatedNetworkModel)
-        validateMappedModel(topRatedNetworkModel, topRatedEntity)
+        validateMappedBackdropPath(topRatedNetworkModel, topRatedEntity)
+        validateMappedFirstAirDate(topRatedNetworkModel, topRatedEntity)
+        validateMappedGenreIds(topRatedNetworkModel, topRatedEntity)
+        validateMappedId(topRatedNetworkModel, topRatedEntity)
+        validateMappedName(topRatedNetworkModel, topRatedEntity)
+        validateMappedOriginCountry(topRatedNetworkModel, topRatedEntity)
+        validateMappedOriginLanguage(topRatedNetworkModel, topRatedEntity)
+        validateMappedOriginName(topRatedNetworkModel, topRatedEntity)
+        validateMappedOverview(topRatedNetworkModel, topRatedEntity)
+        validateMappedPopularity(topRatedNetworkModel, topRatedEntity)
+        validateMappedPosterPath(topRatedNetworkModel, topRatedEntity)
+        validateMappedVoteAverage(topRatedNetworkModel, topRatedEntity)
+        validateMappedVoteCount(topRatedNetworkModel, topRatedEntity)
     }
 
     @Test
@@ -47,13 +71,7 @@ class TopRatedNetworkModelMapperTest : BaseUnitTest() {
         val topRatedEntity = topRatedEntityList[0]
 
         assertEquals(topRatedNetworkModelList.size, topRatedEntityList.size)
-        validateMappedModel(topRatedNetworkModel, topRatedEntity)
-    }
 
-    private fun validateMappedModel(
-        topRatedNetworkModel: TopRatedNetworkModel,
-        topRatedEntity: TopRatedEntity
-    ) {
         validateMappedBackdropPath(topRatedNetworkModel, topRatedEntity)
         validateMappedFirstAirDate(topRatedNetworkModel, topRatedEntity)
         validateMappedGenreIds(topRatedNetworkModel, topRatedEntity)
@@ -67,6 +85,7 @@ class TopRatedNetworkModelMapperTest : BaseUnitTest() {
         validateMappedPosterPath(topRatedNetworkModel, topRatedEntity)
         validateMappedVoteAverage(topRatedNetworkModel, topRatedEntity)
         validateMappedVoteCount(topRatedNetworkModel, topRatedEntity)
+
     }
 
     private fun validateMappedBackdropPath(

@@ -2,7 +2,7 @@ package com.example.tmdbshows.domain
 
 import com.example.tmdbshows.domain.contract.TMDBRepo
 import com.example.tmdbshows.domain.entity.TopRatedEntity
-import com.example.tmdbshows.remote.impl.TMDBRepoImpl
+import com.example.tmdbshows.domain.impl.TMDBRepoImpl
 import com.example.tmdbshows.remote.TMDBApi
 import com.example.tmdbshows.remote.mapper.toprated.TopRatedNetworkModelMapper
 import com.example.tmdbshows.remote.model.networkmodel.TopRatedNetworkModel
@@ -28,7 +28,7 @@ class TMDBRepoTest : BaseUnitTest() {
     private val topRatedNetworkResponse = mock<TopRatedNetworkResponse>()
     private val topRatedNetworkModel = mock<List<TopRatedNetworkModel>>()
     private val topRatedEntityList = mock<List<TopRatedEntity>>()
-    private val throwableMessage = "Network Error"
+    private val throwable: Throwable = Throwable("Network Error")
     private val topRatedNetworkModelMapper: TopRatedNetworkModelMapper = mock()
 
     @Test
@@ -65,28 +65,28 @@ class TMDBRepoTest : BaseUnitTest() {
         launch {
             tmdbRepo.getTopRated("en-US", 1).catch {
                 assertEquals(
-                    throwableMessage, it.message!!
+                    throwable.message!!, it.message!!
                 )
             }.collect()
         }
     }
 
     private suspend fun mockThrowableCase(): TMDBRepo {
-        whenever(tmdbApi.getTopRated(anyInt(), anyString())).thenReturn(
+        whenever(tmdbApi.getTopRated(anyInt(), anyString(), anyString())).thenReturn(
             networkResponse
         )
         whenever(networkResponse.body()).thenReturn(
             null
         )
         whenever(networkResponse.message()).thenReturn(
-            throwableMessage
+            throwable.message!!
         )
 
         return TMDBRepoImpl(tmdbApi, topRatedNetworkModelMapper)
     }
 
     private suspend fun mockSuccessfulCase(): TMDBRepo {
-        whenever(tmdbApi.getTopRated(anyInt(), anyString())).thenReturn(
+        whenever(tmdbApi.getTopRated(anyInt(), anyString(), anyString())).thenReturn(
             networkResponse
         )
         whenever(networkResponse.body()).thenReturn(

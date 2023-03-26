@@ -6,7 +6,7 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class TopRatedNetworkResponse(
-    @Json(name = "page") val page: Int,
+    val page: Int,
     @Json(name = "results") val topRatedNetworkModel: List<TopRatedNetworkModel>,
     @Json(name = "total_pages") val totalPages: Int,
     @Json(name = "total_results") val totalResults: Int

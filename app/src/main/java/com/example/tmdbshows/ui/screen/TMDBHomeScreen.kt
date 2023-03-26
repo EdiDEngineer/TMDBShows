@@ -79,6 +79,7 @@ fun TMDBHomeScreen(
                     )
                 }
             }
+
         }
     }
 }
@@ -108,6 +109,7 @@ fun TMDBHomeRow(modifier: Modifier = Modifier, topRatedEntity: TopRatedEntity) {
                     .size(72.dp)
                     .clip(CircleShape)
             )
+
             Text(
                 modifier = modifier.padding(start = 8.dp),
                 text = topRatedEntity.name,
