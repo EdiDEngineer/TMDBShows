@@ -1,6 +1,8 @@
 package com.example.tmdbshows.domain.entity
 
+import androidx.compose.runtime.Immutable
 
+@Immutable
 data class TopRatedEntity(
     val backdropPath: String,
     val firstAirDate: String,

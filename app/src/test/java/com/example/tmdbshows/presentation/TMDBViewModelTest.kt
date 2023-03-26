@@ -1,25 +1,23 @@
 package com.example.tmdbshows.presentation
 
-
 import com.example.tmdbshows.domain.contract.TMDBRepo
 import com.example.tmdbshows.domain.entity.TopRatedEntity
-import com.example.tmdbshows.presentation.uistate.TopRatedUiState
+import com.example.tmdbshows.presentation.uistate.Transform.DEFAULT
+import com.example.tmdbshows.presentation.uistate.Transform.SORT_ALPHABETICALLY
+import com.example.tmdbshows.presentation.uistate.UIState
 import com.example.tmdbshows.presentation.viewmodel.TMDBViewModel
 import com.example.tmdbshows.tools.BaseUnitTest
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
-
 
 class TMDBViewModelTest : BaseUnitTest() {
 
@@ -37,48 +35,46 @@ class TMDBViewModelTest : BaseUnitTest() {
     @Test
     fun setSuccessStateWhenReceiveTopRatedTest() = runTest {
         val tmdbViewModel = mockSuccessfulCase()
-        var uiStateValue = tmdbViewModel.topRatedUiState.value
-        assertTrue(uiStateValue is TopRatedUiState.Loading)
+        var uiStateValue = tmdbViewModel.topRatedUiStateFlow.value
+        assertTrue(uiStateValue is UIState.Loading)
         advanceUntilIdle()
-        uiStateValue = tmdbViewModel.topRatedUiState.value
-        assertTrue(uiStateValue is TopRatedUiState.Success)
+        uiStateValue = tmdbViewModel.topRatedUiStateFlow.value
+        assertTrue(uiStateValue is UIState.Success && uiStateValue.transform == DEFAULT)
         assertEquals(
-            (uiStateValue as TopRatedUiState.Success).topRatedList,
+            (uiStateValue as UIState.Success).displayBody,
             topRatedEntityList
         )
     }
 
     @Test
-    fun setSuccessStateWhenSortedAlphabeticallyTest() = runTest {
+    fun setSortedStateWhenSortedAlphabeticallyTest() = runTest {
         val tmdbViewModel = mockSuccessfulCase()
-        var uiStateValue = tmdbViewModel.topRatedUiState.value
-        assertTrue(uiStateValue is TopRatedUiState.Loading)
+        var uiStateValue = tmdbViewModel.topRatedUiStateFlow.value
+        assertTrue(uiStateValue is UIState.Loading)
         advanceUntilIdle()
         tmdbViewModel.sortTopRatedAlphabetically()
-        uiStateValue = tmdbViewModel.topRatedUiState.value
-        assertTrue(uiStateValue is TopRatedUiState.Success)
-        assertEquals((uiStateValue as TopRatedUiState.Success).topRatedList,
+        uiStateValue = tmdbViewModel.topRatedUiStateFlow.value
+        assertTrue(uiStateValue is UIState.Success && uiStateValue.transform == SORT_ALPHABETICALLY)
+        assertEquals((uiStateValue as UIState.Success).displayBody,
             topRatedEntityList.sortedBy {
                 it.name
             }
         )
     }
 
-
     @Test
     fun setErrorStateWhenReceiveErrorTest() = runTest {
         val tmdbViewModel = mockThrowableCase()
-        var uiStateValue = tmdbViewModel.topRatedUiState.value
-        assertTrue(uiStateValue is TopRatedUiState.Loading)
+        var uiStateValue = tmdbViewModel.topRatedUiStateFlow.value
+        assertTrue(uiStateValue is UIState.Loading)
         advanceUntilIdle()
-        uiStateValue = tmdbViewModel.topRatedUiState.value
-        assertTrue(uiStateValue is TopRatedUiState.Error)
+        uiStateValue = tmdbViewModel.topRatedUiStateFlow.value
+        assertTrue(uiStateValue is UIState.Failed)
         assertEquals(
-            (uiStateValue as TopRatedUiState.Error).throwable,
+            (uiStateValue as UIState.Failed).error,
             throwable
         )
     }
-
 
     private fun mockSuccessfulCase(): TMDBViewModel {
         whenever(
@@ -109,6 +105,4 @@ class TMDBViewModelTest : BaseUnitTest() {
 
         return TMDBViewModel(tmdbRepo)
     }
-
-
 }

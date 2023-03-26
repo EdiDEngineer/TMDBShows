@@ -1,8 +1,8 @@
-package com.example.tmdbshows.domain.impl
+package com.example.tmdbshows.remote.impl
 
 import com.example.tmdbshows.domain.contract.TMDBRepo
 import com.example.tmdbshows.domain.entity.TopRatedEntity
-import com.example.tmdbshows.remote.TMDBApi
+import com.example.tmdbshows.remote.api.TMDBApi
 import com.example.tmdbshows.remote.mapper.toprated.TopRatedNetworkModelMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -23,5 +23,4 @@ class TMDBRepoImpl @Inject constructor(private val tmdbApi: TMDBApi, private val
             }
         }.flowOn(Dispatchers.IO)
     }
-
 }

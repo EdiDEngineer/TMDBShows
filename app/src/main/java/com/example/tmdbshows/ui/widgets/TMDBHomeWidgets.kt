@@ -1,5 +1,8 @@
-package com.example.tmdbshows.ui.screen
+package com.example.tmdbshows.ui.widgets
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.tmdbshows.R
 import com.example.tmdbshows.domain.entity.TopRatedEntity
-import com.example.tmdbshows.presentation.uistate.TopRatedUiState
+import com.example.tmdbshows.presentation.uistate.UIState
 
 const val SORT_BUTTON_TEST_TAG = "Sort Button"
 const val SORT_ICON_DESCRIPTION = "Sort Icon"
@@ -32,54 +35,65 @@ const val BROKEN_IMAGE_DESCRIPTION = "Broken Image"
 const val MOVIE_IMAGE_DESCRIPTION = "Movie image"
 
 @Composable
-fun TMDBHomeScreen(
+fun TMDBHomeAppBar(modifier: Modifier = Modifier, sortTopRated: () -> Unit) {
+    TopAppBar(title = {
+        Text(stringResource(id = R.string.app_name))
+    }, actions = {
+        IconButton(
+            onClick = sortTopRated,
+            modifier = modifier.testTag(SORT_BUTTON_TEST_TAG)
+        ) {
+            Icon(
+                imageVector = Icons.Rounded.SortByAlpha,
+                contentDescription = SORT_ICON_DESCRIPTION
+            )
+        }
+    })
+}
+
+@Composable
+fun TMDBHomeBody(
     modifier: Modifier = Modifier,
-    topRatedUiState: TopRatedUiState,
-    sortTopRated: () -> Unit
+    paddingValues: PaddingValues,
+    topRatedUiState: UIState<List<TopRatedEntity>>
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
+            .padding(paddingValues),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        TopAppBar(title = {
-            Text(stringResource(id = R.string.app_name))
-        }, actions = {
-            IconButton(onClick = sortTopRated, modifier = modifier.testTag(SORT_BUTTON_TEST_TAG)) {
-                Icon(
-                    imageVector = Icons.Rounded.SortByAlpha,
-                    contentDescription = SORT_ICON_DESCRIPTION
+        when (topRatedUiState) {
+            is UIState.Success -> {
+                TMDBHomeList(modifier, topRatedUiState.displayBody)
+            }
+            is UIState.Loading -> {
+                CircularProgressIndicator(modifier = modifier.testTag(LOADER_TEST_TAG))
+            }
+            is UIState.Failed -> {
+                Image(
+                    modifier = modifier
+                        .fillMaxSize()
+                        .padding(12.dp),
+                    imageVector = Icons.Rounded.BrokenImage,
+                    contentDescription = BROKEN_IMAGE_DESCRIPTION
                 )
             }
-        })
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(6.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            when (topRatedUiState) {
-                is TopRatedUiState.Success -> {
-                    LazyColumn(modifier = modifier.testTag(MOVIE_LIST_TEST_TAG)) {
-                        items(topRatedUiState.topRatedList) { topRatedEntity ->
-                            TMDBHomeRow(modifier = modifier, topRatedEntity)
-                        }
-                    }
-                }
-                is TopRatedUiState.Loading -> {
-                    CircularProgressIndicator(modifier = modifier.testTag(LOADER_TEST_TAG))
-                }
-                is TopRatedUiState.Error -> {
-                    Image(
-                        modifier = modifier
-                            .fillMaxSize()
-                            .padding(12.dp),
-                        imageVector = Icons.Rounded.BrokenImage,
-                        contentDescription = BROKEN_IMAGE_DESCRIPTION
-                    )
-                }
-            }
+        }
+    }
+}
 
+@Composable
+fun TMDBHomeList(
+    modifier: Modifier = Modifier,
+    topRatedList: List<TopRatedEntity>
+) {
+    LazyColumn(modifier = modifier.testTag(MOVIE_LIST_TEST_TAG)) {
+        items(topRatedList,
+            key = { topRatedEntity -> topRatedEntity.id }
+        ) { topRatedEntity ->
+            TMDBHomeRow(modifier = modifier, topRatedEntity)
         }
     }
 }
@@ -88,6 +102,12 @@ fun TMDBHomeScreen(
 fun TMDBHomeRow(modifier: Modifier = Modifier, topRatedEntity: TopRatedEntity) {
     Card(
         modifier = modifier
+            .animateContentSize(
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                    stiffness = Spring.StiffnessLow
+                )
+            )
             .testTag(topRatedEntity.name)
             .fillMaxWidth()
             .padding(8.dp),
@@ -109,7 +129,6 @@ fun TMDBHomeRow(modifier: Modifier = Modifier, topRatedEntity: TopRatedEntity) {
                     .size(72.dp)
                     .clip(CircleShape)
             )
-
             Text(
                 modifier = modifier.padding(start = 8.dp),
                 text = topRatedEntity.name,
