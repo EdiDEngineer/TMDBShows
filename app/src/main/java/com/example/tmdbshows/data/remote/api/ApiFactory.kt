@@ -1,5 +1,6 @@
-package com.example.tmdbshows.remote.api
+package com.example.tmdbshows.data.remote.api
 
+import com.example.tmdbshows.BuildConfig
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -13,11 +14,9 @@ import java.util.concurrent.TimeUnit
 
 object ApiFactory {
 
-    private const val API_KEY = "25a8f80ba018b52efb64f05140f6b43c"
-
-    fun createTMDBApi(retrofit: Retrofit): TMDBApi {
+    fun <T> createRetrofitService(retrofit: Retrofit, apiInterface: Class<T>): T {
         return retrofit
-            .create(TMDBApi::class.java)
+            .create(apiInterface)
     }
 
     fun createRetrofit(
@@ -67,7 +66,7 @@ object ApiFactory {
     fun createRequestInterceptor(): Interceptor = Interceptor { chain ->
         val originalRequest = chain.request()
         val url = originalRequest.url.newBuilder()
-            .addQueryParameter("api_key", API_KEY)
+            .addQueryParameter("api_key", BuildConfig.API_KEY)
             .build()
         val requestBuilder = originalRequest.newBuilder().url(url)
 

@@ -1,21 +1,23 @@
-package com.example.tmdbshows.remote.mapper.toprated
+package com.example.tmdbshows.data.remote.mapper.toprated
 
 import com.example.tmdbshows.domain.entity.TopRatedEntity
-import com.example.tmdbshows.remote.mapper.RemoteModelMapper
-import com.example.tmdbshows.remote.model.networkmodel.TopRatedNetworkModel
+import com.example.tmdbshows.data.remote.mapper.NetworkModelMapper
+import com.example.tmdbshows.data.remote.model.networkmodel.TopRatedNetworkModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import javax.inject.Inject
 
 class TopRatedNetworkModelMapper @Inject constructor() :
-    RemoteModelMapper<TopRatedNetworkModel, TopRatedEntity> {
+    NetworkModelMapper<TopRatedNetworkModel, TopRatedEntity> {
 
     override fun mapFromModel(model: TopRatedNetworkModel): TopRatedEntity {
         return TopRatedEntity(
             safeString(model.backdropPath),
             model.firstAirDate,
-            model.genreIds,
+            model.genreIds.toImmutableList(),
             model.id,
             model.name,
-            model.originCountry,
+            model.originCountry.toImmutableList(),
             model.originalLanguage,
             model.originalName,
             model.overview,

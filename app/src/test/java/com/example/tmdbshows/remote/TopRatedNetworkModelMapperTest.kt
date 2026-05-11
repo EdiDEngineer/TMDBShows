@@ -1,8 +1,8 @@
 package com.example.tmdbshows.remote
 
 import com.example.tmdbshows.domain.entity.TopRatedEntity
-import com.example.tmdbshows.remote.mapper.toprated.TopRatedNetworkModelMapper
-import com.example.tmdbshows.remote.model.networkmodel.TopRatedNetworkModel
+import com.example.tmdbshows.data.remote.mapper.toprated.TopRatedNetworkModelMapper
+import com.example.tmdbshows.data.remote.model.networkmodel.TopRatedNetworkModel
 import com.example.tmdbshows.tools.BaseUnitTest
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
@@ -39,15 +39,28 @@ class TopRatedNetworkModelMapperTest : BaseUnitTest() {
             createFakeTopRatedNetworkModel(
                 null,
                 null
+            ),
+            createFakeTopRatedNetworkModel(
+                "/99vBORZixICa32Pwdwj0lWcr8K.jpg",
+                "/phv2Jc4H8cvRzvTKb9X1uKMboTu.jpg"
+            ),
+            createFakeTopRatedNetworkModel(
+                null,
+                "/phv2Jc4H8cvRzvTKb9X1uKMboTu.jpg"
+            ),
+            createFakeTopRatedNetworkModel(
+                "/99vBORZixICa32Pwdwj0lWcr8K.jpg",
+                null
             )
         )
 
         val topRatedEntityList = classUnderTest.mapModelList(topRatedNetworkModelList)
-        val topRatedNetworkModel = topRatedNetworkModelList[0]
-        val topRatedEntity = topRatedEntityList[0]
-
         assertEquals(topRatedNetworkModelList.size, topRatedEntityList.size)
-        validateMappedModel(topRatedNetworkModel, topRatedEntity)
+
+        topRatedEntityList.forEachIndexed { index, topRatedEntity ->
+            val topRatedNetworkModel = topRatedNetworkModelList[index]
+            validateMappedModel(topRatedNetworkModel, topRatedEntity)
+        }
     }
 
     private fun validateMappedModel(

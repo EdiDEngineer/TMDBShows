@@ -15,13 +15,26 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class TMDBActivity : ComponentActivity() {
+    private val tmdbViewModel: TMDBViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val tmdbViewModel: TMDBViewModel by viewModels()
         setContent {
             TMDBHomeApp(tmdbViewModel)
         }
+
+        /**
+         *  viewLifecycleOwner.lifecycleScope.launch {
+         *         viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+         *             viewModel.uiState.collect {
+         *                 // Process item
+         *             }
+         *         }
+         *     }
+         * **/
     }
+
+
+
 }
 
 @Composable
@@ -30,6 +43,8 @@ fun TMDBHomeApp(tmdbViewModel: TMDBViewModel = viewModel()) {
     TMDBShowsTheme {
         TMDBHomeScreen(topRatedUiState = topRatedUiState, sortTopRated = {
             tmdbViewModel.sortTopRatedAlphabetically()
+        }, refreshTopRated = {
+            tmdbViewModel.refreshTopRated()
         })
     }
 }

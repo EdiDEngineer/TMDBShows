@@ -1,7 +1,7 @@
 package com.example.tmdbshows.di
 
-import com.example.tmdbshows.remote.api.ApiFactory
-import com.example.tmdbshows.remote.api.TMDBApi
+import com.example.tmdbshows.data.remote.api.ApiFactory
+import com.example.tmdbshows.data.remote.api.TMDBService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,7 +26,7 @@ object RemoteModule {
 
     @Singleton
     @Provides
-    fun provideTMDBApi(retrofit: Retrofit): TMDBApi = ApiFactory.createTMDBApi(retrofit)
+    fun provideTMDBService(retrofit: Retrofit): TMDBService = ApiFactory.createRetrofitService(retrofit, TMDBService::class.java)
 
     @Provides
     fun provideRetrofit(okHttpClient: OkHttpClient, baseUrl: HttpUrl): Retrofit =

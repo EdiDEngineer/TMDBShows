@@ -1,7 +1,7 @@
 package com.example.tmdbshows.di
 
 import com.example.tmdbshows.domain.contract.TMDBRepo
-import com.example.tmdbshows.remote.impl.TMDBRepoImpl
+import com.example.tmdbshows.data.impl.TMDBRepoImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

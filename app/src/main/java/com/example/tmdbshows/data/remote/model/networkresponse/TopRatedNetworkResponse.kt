@@ -1,6 +1,6 @@
-package com.example.tmdbshows.remote.model.networkresponse
+package com.example.tmdbshows.data.remote.model.networkresponse
 
-import com.example.tmdbshows.remote.model.networkmodel.TopRatedNetworkModel
+import com.example.tmdbshows.data.remote.model.networkmodel.TopRatedNetworkModel
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 

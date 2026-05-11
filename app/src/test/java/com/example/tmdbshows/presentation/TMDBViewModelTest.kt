@@ -2,28 +2,33 @@ package com.example.tmdbshows.presentation
 
 import com.example.tmdbshows.domain.contract.TMDBRepo
 import com.example.tmdbshows.domain.entity.TopRatedEntity
-import com.example.tmdbshows.presentation.uistate.Transform.DEFAULT
-import com.example.tmdbshows.presentation.uistate.Transform.SORT_ALPHABETICALLY
+import com.example.tmdbshows.domain.entity.sortTopRatedListByName
 import com.example.tmdbshows.presentation.uistate.UIState
 import com.example.tmdbshows.presentation.viewmodel.TMDBViewModel
 import com.example.tmdbshows.tools.BaseUnitTest
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mock
+import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 
+@RunWith(MockitoJUnitRunner::class) //android mocking
 class TMDBViewModelTest : BaseUnitTest() {
 
-    private val tmdbRepo: TMDBRepo = mock()
-    private val topRatedEntityList = mock<List<TopRatedEntity>>()
     private val throwable: Throwable = Throwable("Network Error")
+    @Mock
+    private lateinit var tmdbRepo: TMDBRepo
+    @Mock
+    private lateinit var topRatedEntityList: List<TopRatedEntity>
 
     @Test
     fun getTopRatedFromRepoTest() = runTest {
@@ -33,46 +38,55 @@ class TMDBViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun setLoadingStateOnViewModelCreated() = runTest {
+        val tmdbViewModel = mockSuccessfulCase()
+        assertTrue(tmdbViewModel.topRatedUiStateFlow.value is UIState.Loading)
+    }
+
+    @Test
     fun setSuccessStateWhenReceiveTopRatedTest() = runTest {
         val tmdbViewModel = mockSuccessfulCase()
-        var uiStateValue = tmdbViewModel.topRatedUiStateFlow.value
-        assertTrue(uiStateValue is UIState.Loading)
         advanceUntilIdle()
-        uiStateValue = tmdbViewModel.topRatedUiStateFlow.value
-        assertTrue(uiStateValue is UIState.Success && uiStateValue.transform == DEFAULT)
+        val uiStateValue = tmdbViewModel.topRatedUiStateFlow.value
+        assertTrue(uiStateValue is UIState.Success)
         assertEquals(
-            (uiStateValue as UIState.Success).displayBody,
-            topRatedEntityList
+            topRatedEntityList, (uiStateValue as UIState.Success).body
         )
     }
 
     @Test
-    fun setSortedStateWhenSortedAlphabeticallyTest() = runTest {
+    fun setSuccessStateWhenSortedAlphabeticallyTest() = runTest {
         val tmdbViewModel = mockSuccessfulCase()
-        var uiStateValue = tmdbViewModel.topRatedUiStateFlow.value
-        assertTrue(uiStateValue is UIState.Loading)
-        advanceUntilIdle()
         tmdbViewModel.sortTopRatedAlphabetically()
-        uiStateValue = tmdbViewModel.topRatedUiStateFlow.value
-        assertTrue(uiStateValue is UIState.Success && uiStateValue.transform == SORT_ALPHABETICALLY)
-        assertEquals((uiStateValue as UIState.Success).displayBody,
-            topRatedEntityList.sortedBy {
-                it.name
-            }
+        advanceUntilIdle()
+        val uiStateValue = tmdbViewModel.topRatedUiStateFlow.value
+        assertTrue(uiStateValue is UIState.Success)
+        assertEquals(
+            topRatedEntityList.sortTopRatedListByName(), (uiStateValue as UIState.Success).body
+        )
+    }
+
+    @Test
+    fun setSuccessStateWhenRefreshTopRatedTest() = runTest {
+        val tmdbViewModel = mockSuccessfulCase()
+        tmdbViewModel.refreshTopRated()
+        advanceUntilIdle()
+        val uiStateValue = tmdbViewModel.topRatedUiStateFlow.value
+        assertTrue(uiStateValue is UIState.Success)
+        assertEquals(
+            topRatedEntityList, (uiStateValue as UIState.Success).body
         )
     }
 
     @Test
     fun setErrorStateWhenReceiveErrorTest() = runTest {
         val tmdbViewModel = mockThrowableCase()
-        var uiStateValue = tmdbViewModel.topRatedUiStateFlow.value
-        assertTrue(uiStateValue is UIState.Loading)
         advanceUntilIdle()
-        uiStateValue = tmdbViewModel.topRatedUiStateFlow.value
+        val uiStateValue = tmdbViewModel.topRatedUiStateFlow.value
         assertTrue(uiStateValue is UIState.Failed)
         assertEquals(
-            (uiStateValue as UIState.Failed).error,
-            throwable
+            throwable.message,
+            (uiStateValue as UIState.Failed).error.message,
         )
     }
 
@@ -82,11 +96,9 @@ class TMDBViewModelTest : BaseUnitTest() {
                 anyString(),
                 anyInt(),
             )
-        ).thenReturn(
-            flow {
-                emit(topRatedEntityList)
-            }
-        )
+        ).thenReturn(flow {
+            emit(topRatedEntityList)
+        })
 
         return TMDBViewModel(tmdbRepo)
     }
@@ -97,11 +109,9 @@ class TMDBViewModelTest : BaseUnitTest() {
                 anyString(),
                 anyInt(),
             )
-        ).thenReturn(
-            flow {
-                throw throwable
-            }
-        )
+        ).thenReturn(flow {
+            throw throwable
+        })
 
         return TMDBViewModel(tmdbRepo)
     }

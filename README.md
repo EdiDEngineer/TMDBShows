@@ -30,7 +30,7 @@ This App uses ``MVVM``(Model-View-ViewModel) + Clean Architecture principles.
 ## Libraries used
 - Jetpack Compose for UI.
 - Hilt for dependency injection.
-- Lifecycle components containing, viewmodel and lifecylce to handle state.
+- Lifecycle components containing, viewmodel and lifecycle to handle state.
 - Retrofit + OkHttp to make network calls.
 - Coroutines + Flow for asynchronous tasks. 
 - Coil for image loading.

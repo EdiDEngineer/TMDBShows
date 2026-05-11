@@ -1,4 +1,4 @@
-package com.example.tmdbshows.remote.model.networkmodel
+package com.example.tmdbshows.data.remote.model.networkmodel
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
